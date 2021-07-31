@@ -1,5 +1,5 @@
 from flask import Blueprint
-from . import data
+import data
 from json import dumps
 
 views = Blueprint('views', __name__)
