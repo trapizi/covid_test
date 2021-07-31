@@ -10,28 +10,28 @@ import json
 
 CSV_URL = 'https://data.nsw.gov.au/data/dataset/60616720-3c60-4c52-b499-751f31e3b132/resource/945c6204-272a-4cad-8e33-dde791f5059a/download/pcr_testing_table1_location.csv'
 cwd = os.path.dirname(os.path.realpath(__file__))
-file_template = cwd + "/website/processed-data-{}".format(date.today())
+file_template = "processed-data-{}".format(date.today())
 current_date_csv_file = file_template + ".csv"
 current_date_json_file = file_template + ".json"
 
 
 def get_data():
-    # request_data()
-    process_csv()
+    #process_csv()
     csv_to_json()
     return get_json_data_by_lga()
 
 def request_data():
-    with closing(requests.get(CSV_URL, stream=True)) as r:
-        reader = iterdecode(csv.reader(r.iter_lines(), 'utf-8'), 
-                            delimiter=',', 
-                            quotechar='"')
-    # download = requests.get(CSV_URL)
+    csv_file = open(current_date_csv_file, 'wb')
+    req = requests.get(CSV_URL)
+    url_content = req.content
 
-    # decoded_content = download.content.decode('utf-8')
-    
-    # with open("/csv/data-{}.csv".format(date.today()), 'wb') as f:
-    #     f.write(response.content)
+    csv_file.write(url_content)
+    csv_file.close()
+    # with closing(requests.get(CSV_URL, stream=True)) as r:
+    #     r = iterdecode(csv.reader(r.iter_lines(), 'utf-8'), 
+    #                         delimiter=',', 
+    #                         quotechar='"')
+
 
     
 def process_csv():
@@ -105,21 +105,11 @@ def get_json_data_by_lga():
                         "date": ""
                     }
                 })
-    # print(json_object[6]['lga_code19'])
 
     json_output = json.dumps(data, indent=4)
     with open("output.json", 'w') as output:
         json.dump(data, output)
     return json_output
-
-
-    # data = {}
-    # json_file = current_date_json_file
-    # fields_names = ('test_date','postcode','lhd_2010_code','lhd_2010_name','lga_code19','lga_name19')
-    # reader = csv.DictReader(current_date_csv_file, fields_names)
-    # for row in reader:
-    #     json.dump(row, json_file)
-    #     json_file.write('\n')
 
 if __name__ == "__main__":
     get_data()

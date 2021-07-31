@@ -14,11 +14,3 @@ def get_data_endpoint():
     response = data.get_data()
 
     return response
-    
-
-
-    # try:
-    #     data = get_data()
-    #     return "SUCCESS"
-    # catch Exception:
-    #     return "FAILED TO FETCH" 
